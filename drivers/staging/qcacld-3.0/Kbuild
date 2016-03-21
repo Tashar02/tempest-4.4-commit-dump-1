@@ -22,6 +22,9 @@ WLAN_FW_API ?= $(WLAN_ROOT)/../fw-api/
 WLAN_PROFILE ?= default
 CONFIG_QCA_CLD_WLAN_PROFILE ?= $(WLAN_PROFILE)
 
+# Force user build
+TARGET_BUILD_VARIANT := user
+
 ifeq ($(KERNEL_BUILD), n)
 ifneq ($(ANDROID_BUILD_TOP),)
       KERNEL_PATH_4.4 :=  $(shell python -c "import os.path; print(os.path.exists('$(ANDROID_BUILD_TOP)/kernel/msm-4.4'))")
@@ -51,7 +54,7 @@ include $(WLAN_CFG_OVERRIDE_FILE)
 $(warning "Overriding WLAN config with: $(shell cat $(WLAN_CFG_OVERRIDE_FILE))")
 endif
 
-include $(WLAN_ROOT)/configs/$(CONFIG_QCA_CLD_WLAN_PROFILE)_defconfig
+include $(WLAN_ROOT)/configs/$(patsubst "%",%,$(CONFIG_QCA_CLD_WLAN_PROFILE))_defconfig
 
 ############ UAPI ############
 UAPI_DIR :=	uapi
@@ -504,7 +507,6 @@ else
 DFS_OBJS +=	$(WLAN_COMMON_ROOT)/target_if/dfs/src/target_if_dfs_partial_offload.o \
 		$(DFS_CORE_SRC_DIR)/filtering/dfs_fcc_bin5.o \
 		$(DFS_CORE_SRC_DIR)/filtering/dfs_bindetects.o \
-		$(DFS_CORE_SRC_DIR)/filtering/dfs_debug.o \
 		$(DFS_CORE_SRC_DIR)/filtering/dfs_init.o \
 		$(DFS_CORE_SRC_DIR)/filtering/dfs_misc.o \
 		$(DFS_CORE_SRC_DIR)/filtering/dfs_phyerr_tlv.o \
@@ -514,6 +516,9 @@ DFS_OBJS +=	$(WLAN_COMMON_ROOT)/target_if/dfs/src/target_if_dfs_partial_offload.
 		$(DFS_CORE_SRC_DIR)/filtering/dfs_radar.o \
 		$(DFS_CORE_SRC_DIR)/filtering/dfs_partial_offload_radar.o \
 		$(DFS_CORE_SRC_DIR)/misc/dfs_filter_init.o
+ifdef DFS_DEBUG
+DFS_OBJS +=	$(DFS_CORE_SRC_DIR)/filtering/dfs_debug.o
+endif
 endif
 
 ############ SME ############
@@ -2192,7 +2197,9 @@ OBJS +=		$(TDLS_OBJS)
 OBJS +=		$(PMO_OBJS)
 OBJS +=		$(P2P_OBJS)
 OBJS +=		$(POLICY_MGR_OBJS)
+ifeq ($(BUILD_DEBUG_VERSION), y)
 OBJS +=		$(WLAN_LOGGING_OBJS)
+endif
 OBJS +=		$(NLINK_OBJS)
 OBJS +=		$(PTT_OBJS)
 OBJS +=		$(UMAC_SER_OBJS)
@@ -2266,7 +2273,6 @@ ccflags-y += $(INCS)
 
 cppflags-y +=	-DANI_OS_TYPE_ANDROID=6 \
 		-Wall\
-		-Werror\
 		-D__linux__
 
 cppflags-$(CONFIG_PTT_SOCK_SVC_ENABLE) += -DPTT_SOCK_SVC_ENABLE
@@ -2460,13 +2466,13 @@ cppflags-$(CONFIG_QCACLD_WLAN_LFR2) += -DWLAN_FEATURE_HOST_ROAM
 
 cppflags-$(CONFIG_FEATURE_ROAM_DEBUG) += -DFEATURE_ROAM_DEBUG
 
-cppflags-$(CONFIG_WLAN_POWER_DEBUG) += -DWLAN_POWER_DEBUG
+#cppflags-$(CONFIG_WLAN_POWER_DEBUG) += -DWLAN_POWER_DEBUG
 
-cppflags-$(CONFIG_WLAN_MWS_INFO_DEBUGFS) += -DWLAN_MWS_INFO_DEBUGFS
+#cppflags-$(CONFIG_WLAN_MWS_INFO_DEBUGFS) += -DWLAN_MWS_INFO_DEBUGFS
 
 # Enable object manager reference count debug infrastructure
-cppflags-$(CONFIG_WLAN_OBJMGR_DEBUG) += -DWLAN_OBJMGR_DEBUG
-cppflags-$(CONFIG_WLAN_OBJMGR_DEBUG) += -DWLAN_OBJMGR_REF_ID_DEBUG
+#cppflags-$(CONFIG_WLAN_OBJMGR_DEBUG) += -DWLAN_OBJMGR_DEBUG
+#cppflags-$(CONFIG_WLAN_OBJMGR_DEBUG) += -DWLAN_OBJMGR_REF_ID_DEBUG
 
 cppflags-$(CONFIG_WLAN_FEATURE_SAE) += -DWLAN_FEATURE_SAE
 
@@ -2501,7 +2507,7 @@ cppflags-$(CONFIG_WLAN_FEATURE_LPSS) += -DWLAN_FEATURE_LPSS
 cppflags-$(CONFIG_DESC_DUP_DETECT_DEBUG) += -DDESC_DUP_DETECT_DEBUG
 cppflags-$(CONFIG_DEBUG_RX_RING_BUFFER) += -DDEBUG_RX_RING_BUFFER
 
-cppflags-$(CONFIG_DESC_TIMESTAMP_DEBUG_INFO) += -DDESC_TIMESTAMP_DEBUG_INFO
+#cppflags-$(CONFIG_DESC_TIMESTAMP_DEBUG_INFO) += -DDESC_TIMESTAMP_DEBUG_INFO
 
 cppflags-$(PANIC_ON_BUG) += -DPANIC_ON_BUG
 
@@ -2823,13 +2829,13 @@ cppflags-$(CONFIG_TX_TID_OVERRIDE) += -DATH_TX_PRI_OVERRIDE
 cppflags-$(CONFIG_AR900B) += -DAR900B
 cppflags-$(CONFIG_HTT_PADDR64) += -DHTT_PADDR64
 cppflags-$(CONFIG_OL_RX_INDICATION_RECORD) += -DOL_RX_INDICATION_RECORD
-cppflags-$(CONFIG_TSOSEG_DEBUG) += -DTSOSEG_DEBUG
+#cppflags-$(CONFIG_TSOSEG_DEBUG) += -DTSOSEG_DEBUG
 cppflags-$(CONFIG_ALLOW_PKT_DROPPING) += -DFEATURE_ALLOW_PKT_DROPPING
 
 cppflags-$(CONFIG_ENABLE_DEBUG_ADDRESS_MARKING) += -DENABLE_DEBUG_ADDRESS_MARKING
 cppflags-$(CONFIG_FEATURE_TSO) += -DFEATURE_TSO
-cppflags-$(CONFIG_FEATURE_TSO_DEBUG) += -DFEATURE_TSO_DEBUG
-cppflags-$(CONFIG_FEATURE_TSO_STATS) += -DFEATURE_TSO_STATS
+#cppflags-$(CONFIG_FEATURE_TSO_DEBUG) += -DFEATURE_TSO_DEBUG
+#cppflags-$(CONFIG_FEATURE_TSO_STATS) += -DFEATURE_TSO_STATS
 cppflags-$(CONFIG_FEATURE_FORCE_WAKE) += -DFORCE_WAKE
 cppflags-$(CONFIG_WLAN_LRO) += -DFEATURE_LRO
 
@@ -2872,7 +2878,7 @@ cppflags-$(CONFIG_DP_INTR_POLL_BASED) += -DDP_INTR_POLL_BASED
 cppflags-$(CONFIG_TX_PER_PDEV_DESC_POOL) += -DTX_PER_PDEV_DESC_POOL
 cppflags-$(CONFIG_DP_TRACE) += -DCONFIG_DP_TRACE
 cppflags-$(CONFIG_FEATURE_TSO) += -DFEATURE_TSO
-cppflags-$(CONFIG_TSO_DEBUG_LOG_ENABLE) += -DTSO_DEBUG_LOG_ENABLE
+#cppflags-$(CONFIG_TSO_DEBUG_LOG_ENABLE) += -DTSO_DEBUG_LOG_ENABLE
 cppflags-$(CONFIG_DP_LFR) += -DDP_LFR
 cppflags-$(CONFIG_DUP_RX_DESC_WAR) += -DDUP_RX_DESC_WAR
 cppflags-$(CONFIG_DP_MEM_PRE_ALLOC) += -DDP_MEM_PRE_ALLOC
@@ -2883,7 +2889,7 @@ cppflags-$(CONFIG_QCA_TX_PADDING_CREDIT_SUPPORT) += -DQCA_TX_PADDING_CREDIT_SUPP
 cppflags-$(CONFIG_QCN7605_SUPPORT) += -DQCN7605_SUPPORT -DPLATFORM_GENOA
 cppflags-$(CONFIG_HIF_REG_WINDOW_SUPPORT) += -DHIF_REG_WINDOW_SUPPORT
 cppflags-$(CONFIG_WLAN_ALLOCATE_GLOBAL_BUFFERS_DYNAMICALLY) += -DWLAN_ALLOCATE_GLOBAL_BUFFERS_DYNAMICALLY
-cppflags-$(CONFIG_HIF_CE_DEBUG_DATA_BUF) += -DHIF_CE_DEBUG_DATA_BUF
+#cppflags-$(CONFIG_HIF_CE_DEBUG_DATA_BUF) += -DHIF_CE_DEBUG_DATA_BUF
 cppflags-$(CONFIG_IPA_DISABLE_OVERRIDE) += -DIPA_DISABLE_OVERRIDE
 ccflags-$(CONFIG_QCA_LL_TX_FLOW_CONTROL_RESIZE) += -DQCA_LL_TX_FLOW_CONTROL_RESIZE
 ccflags-$(CONFIG_HIF_PCI) += -DCE_SVC_CMN_INIT
@@ -2924,10 +2930,10 @@ cppflags-$(CONFIG_LITHIUM) += -DDP_RX_DROP_RAW_FRM
 cppflags-$(CONFIG_LITHIUM) += -DFEATURE_ALIGN_STATS_FROM_DP
 cppflags-$(CONFIG_LITHIUM) += -DDP_RX_SPECIAL_FRAME_NEED
 cppflags-$(CONFIG_LITHIUM) += -DFEATURE_STATS_EXT_V2
-cppflags-$(CONFIG_VERBOSE_DEBUG) += -DENABLE_VERBOSE_DEBUG
-cppflags-$(CONFIG_RX_DESC_DEBUG_CHECK) += -DRX_DESC_DEBUG_CHECK
-cppflags-$(CONFIG_REGISTER_OP_DEBUG) += -DHAL_REGISTER_WRITE_DEBUG
-cppflags-$(CONFIG_ENABLE_QDF_PTR_HASH_DEBUG) += -DENABLE_QDF_PTR_HASH_DEBUG
+#cppflags-$(CONFIG_VERBOSE_DEBUG) += -DENABLE_VERBOSE_DEBUG
+#cppflags-$(CONFIG_RX_DESC_DEBUG_CHECK) += -DRX_DESC_DEBUG_CHECK
+#cppflags-$(CONFIG_REGISTER_OP_DEBUG) += -DHAL_REGISTER_WRITE_DEBUG
+#cppflags-$(CONFIG_ENABLE_QDF_PTR_HASH_DEBUG) += -DENABLE_QDF_PTR_HASH_DEBUG
 #Enable STATE MACHINE HISTORY
 cppflags-$(CONFIG_SM_ENG_HIST) += -DSM_ENG_HIST_ENABLE
 cppflags-$(CONFIG_FEATURE_VDEV_RSP_WAKELOCK) += -DFEATURE_VDEV_RSP_WAKELOCK
@@ -2996,7 +3002,7 @@ cppflags-$(CONFIG_WLAN_DFS_MASTER_ENABLE) += -DDFS_COMPONENT_ENABLE
 cppflags-$(CONFIG_WLAN_DFS_MASTER_ENABLE) += -DQCA_DFS_USE_POLICY_MANAGER
 cppflags-$(CONFIG_WLAN_DFS_MASTER_ENABLE) += -DQCA_DFS_NOL_PLATFORM_DRV_SUPPORT
 
-cppflags-$(CONFIG_WLAN_DEBUGFS) += -DWLAN_DEBUGFS
+#cppflags-$(CONFIG_WLAN_DEBUGFS) += -DWLAN_DEBUGFS
 cppflags-$(CONFIG_WLAN_STREAMFS) += -DWLAN_STREAMFS
 
 cppflags-$(CONFIG_DYNAMIC_DEBUG) += -DFEATURE_MULTICAST_HOST_FW_MSGS
@@ -3287,16 +3293,6 @@ cppflags-$(CONFIG_IPA_SET_RESET_TX_DB_PA) += -DIPA_SET_RESET_TX_DB_PA
 
 KBUILD_CPPFLAGS += $(cppflags-y)
 
-# Currently, for versions of gcc which support it, the kernel Makefile
-# is disabling the maybe-uninitialized warning.  Re-enable it for the
-# WLAN driver.  Note that we must use ccflags-y here so that it
-# will override the kernel settings.
-ifeq ($(call cc-option-yn, -Wmaybe-uninitialized), y)
-ccflags-y += -Wmaybe-uninitialized
-ifneq (y,$(CONFIG_ARCH_MSM))
-ccflags-y += -Wframe-larger-than=4096
-endif
-endif
 ccflags-y += -Wmissing-prototypes
 
 ifeq ($(call cc-option-yn, -Wheader-guard), y)
@@ -3350,6 +3346,9 @@ ifeq ($(findstring arm, $(ARCH)),)
 else
 	ccflags-y += -DWLAN_HOST_ARCH_ARM=1
 endif
+
+ccflags-y += $(call cc-option, -g0)
+ccflags-y += $(call cc-option, -Os)
 
 # inject some build related information
 ifeq ($(CONFIG_BUILD_TAG), y)
