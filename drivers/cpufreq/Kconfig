@@ -53,7 +53,7 @@ choice
 	default CPU_FREQ_DEFAULT_GOV_SCHEDUTIL
 	help
 	  This option sets which CPUFreq governor shall be loaded at
-	  startup. If in doubt, select 'performance'.
+	  startup. If in doubt, select 'schedutil'.
 
 config CPU_FREQ_DEFAULT_GOV_SCHEDUTIL
 	bool "schedutil"
@@ -61,19 +61,18 @@ config CPU_FREQ_DEFAULT_GOV_SCHEDUTIL
 	select CPU_FREQ_GOV_SCHEDUTIL
 	help
 	  Use the 'schedutil' CPUFreq governor by default. If unsure,
-	  have a look at the help section of that governor.
-endchoice
+	  have a look at the help section of that governor. The fallback
+	  governor will be 'schedutil'.
 
-config CPU_BOOST
-	tristate "Event base short term CPU freq boost"
-	depends on CPU_FREQ
+config CPU_FREQ_DEFAULT_GOV_SCHEDALUCARD
+	bool "schedalucard"
+	depends on SMP
+	select CPU_FREQ_GOV_SCHEDALUCARD
 	help
-	  This driver boosts the frequency of one or more CPUs based on
-	  various events that might occur in the system. As of now, the
-	  events it reacts to are:
-	  - Migration of important threads from one CPU to another.
-
-	  If in doubt, say N.
+	  Use the 'schedalucard' CPUFreq governor by default. If unsure,
+	  have a look at the help section of that governor. The fallback
+	  governor will be 'schedutil'.
+endchoice
 
 config CPU_FREQ_GOV_SCHEDUTIL
 	bool "'schedutil' cpufreq policy governor"
@@ -89,6 +88,20 @@ config CPU_FREQ_GOV_SCHEDUTIL
 	  case, it is proportional to the current frequency of the CPU.  The
 	  frequency tipping point is at utilization/capacity equal to 80% in
 	  both cases.
+
+	  If in doubt, say N.
+
+config CPU_FREQ_GOV_SCHEDALUCARD
+	bool "'schedalucard' cpufreq policy governor"
+	depends on CPU_FREQ && SMP
+	select CPU_FREQ_GOV_ATTR_SET
+	select IRQ_WORK
+	help
+	  This governor makes decisions based on the utilization data provided
+	  by the scheduler.  It sets the CPU frequency to be proportional to
+	  the utilization/capacity ratio coming from the scheduler. The
+	  frequency tipping point is at utilization/capacity equal to 80%
+	  by default.
 
 	  If in doubt, say N.
 
@@ -143,6 +156,17 @@ config SCHED_STUNE_BOOST
 	  A value of 0 disables SchedTune boosting for this level.
 
 endif
+
+config CPU_BOOST
+	tristate "Event base short term CPU freq boost"
+	depends on CPU_FREQ
+	help
+	  This driver boosts the frequency of one or more CPUs based on
+	  various events that might occur in the system. As of now, the
+	  events it reacts to are:
+	  - Migration of important threads from one CPU to another.
+
+	  If in doubt, say N.
 
 config CPUFREQ_DT
 	tristate "Generic DT based cpufreq driver"
