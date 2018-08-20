@@ -183,7 +183,7 @@ static void sugov_update_commit(struct sugov_policy *sg_policy, u64 time,
 
 		policy->cur = next_freq;
 		for_each_cpu(cpu, policy->cpus) {
-			trace_cpu_frequency(next_freq, cpu);
+//			trace_cpu_frequency(next_freq, cpu);
 		}
 	} else {
 		if (use_pelt())
