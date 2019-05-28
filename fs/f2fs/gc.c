@@ -162,8 +162,8 @@ do_gc:
 			f2fs_info(sbi, "dropped caches");
 		}
 
-		trace_f2fs_background_gc(sbi->sb, wait_ms,
-				prefree_segments(sbi), free_segments(sbi));
+		//trace_f2fs_background_gc(sbi->sb, wait_ms,
+		//		prefree_segments(sbi), free_segments(sbi));
 
 		/* balancing f2fs's metadata periodically */
 		f2fs_balance_fs_bg(sbi);
@@ -617,10 +617,10 @@ got_result:
 
 	}
 out:
-	if (p.min_segno != NULL_SEGNO)
-		trace_f2fs_get_victim(sbi->sb, type, gc_type, &p,
-				sbi->cur_victim_sec,
-				prefree_segments(sbi), free_segments(sbi));
+	//if (p.min_segno != NULL_SEGNO)
+	//	trace_f2fs_get_victim(sbi->sb, type, gc_type, &p,
+	//			sbi->cur_victim_sec,
+	//			prefree_segments(sbi), free_segments(sbi));
 	mutex_unlock(&dirty_i->seglist_lock);
 
 	return (p.min_segno == NULL_SEGNO) ? 0 : 1;
