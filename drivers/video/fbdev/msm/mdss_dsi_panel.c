@@ -49,8 +49,10 @@ extern bool synaptics_gesture_func_on;
 #endif
 #endif
 
-
 DEFINE_LED_TRIGGER(bl_led_trigger);
+static bool ce_enable = true;
+static bool srgb_enable = true;
+static bool cabc_enable = false;
 
 void mdss_dsi_panel_pwm_cfg(struct mdss_dsi_ctrl_pdata *ctrl)
 {
