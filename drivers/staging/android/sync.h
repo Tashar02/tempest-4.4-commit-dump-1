@@ -345,7 +345,7 @@ int sync_fence_cancel_async(struct sync_fence *fence,
  */
 int sync_fence_wait(struct sync_fence *fence, long timeout);
 
-#if defined(CONFIG_DEBUG_FS)
+#if defined(CONFIG_DEBUG_FS) && defined(CONFIG_DEBUG_TIMELINE)
 void sync_timeline_debug_add(struct sync_timeline *obj);
 void sync_timeline_debug_remove(struct sync_timeline *obj);
 void sync_fence_debug_add(struct sync_fence *fence);
