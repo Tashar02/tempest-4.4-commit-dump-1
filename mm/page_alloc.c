@@ -68,6 +68,8 @@
 #include <asm/div64.h>
 #include "internal.h"
 
+atomic_long_t kswapd_waiters = ATOMIC_LONG_INIT(0);
+
 #ifndef CONFIG_KERNEL_DEBUG
 inline void dump_page(struct page *page, const char *reason) {}
 EXPORT_SYMBOL(dump_page);
@@ -3142,6 +3144,7 @@ __alloc_pages_slowpath(gfp_t gfp_mask, unsigned int order,
 	enum migrate_mode migration_mode = MIGRATE_ASYNC;
 	bool deferred_compaction = false;
 	int contended_compaction = COMPACT_CONTENDED_NONE;
+	bool woke_kswapd = false;
 
 	/*
 	 * In the slowpath, we sanity check order to avoid ever trying to
@@ -3171,8 +3174,13 @@ __alloc_pages_slowpath(gfp_t gfp_mask, unsigned int order,
 		goto nopage;
 
 retry:
-	if (gfp_mask & __GFP_KSWAPD_RECLAIM)
+	if (gfp_mask & __GFP_KSWAPD_RECLAIM) {
+		if (!woke_kswapd) {
+			atomic_long_inc(&kswapd_waiters);
+			woke_kswapd = true;
+		}
 		wake_all_kswapds(order, ac);
+	}
 
 	/*
 	 * OK, we're below the kswapd watermark and have kicked background
@@ -3228,8 +3236,10 @@ retry:
 		goto nopage;
 
 	/* Avoid allocations with no watermarks from looping endlessly */
-	if (test_thread_flag(TIF_MEMDIE) && !(gfp_mask & __GFP_NOFAIL))
+	if (test_thread_flag(TIF_MEMDIE) && !(gfp_mask & __GFP_NOFAIL)) {
+		gfp_mask |= __GFP_NOWARN;
 		goto nopage;
+	}
 
 	/*
 	 * Try direct compaction. The first pass is asynchronous. Subsequent
@@ -3322,8 +3332,11 @@ noretry:
 	if (page)
 		goto got_pg;
 nopage:
-	warn_alloc_failed(gfp_mask, order, NULL);
 got_pg:
+	if (woke_kswapd)
+		atomic_long_dec(&kswapd_waiters);
+	if (!page)
+		warn_alloc_failed(gfp_mask, order, NULL);
 	return page;
 }
 
