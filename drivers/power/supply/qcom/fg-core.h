@@ -448,7 +448,7 @@ struct fg_chip {
 	bool			battery_missing;
 	bool			fg_restarting;
 	bool			charge_full;
-#ifdef CONFIG_MACH_XIAOMI_WAYNE
+#if defined(CONFIG_MACH_XIAOMI_LAVENDER) || defined(CONFIG_MACH_XIAOMI_WAYNE)
 	bool			report_full;
 #endif
 	bool			recharge_soc_adjusted;
