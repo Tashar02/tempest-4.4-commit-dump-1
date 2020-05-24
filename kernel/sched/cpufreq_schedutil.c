@@ -708,6 +708,23 @@ static int fb_notifier_cb(struct notifier_block *nb, unsigned long action,
 	return NOTIFY_OK;
 }
 
+static int fb_notifier_cb(struct notifier_block *nb, unsigned long action,
+			  void *data)
+{
+	struct sugov_policy *sg_policy = container_of(nb, struct sugov_policy, fb_notif);
+	int *blank = ((struct fb_event *)data)->data;
+
+	if (action != FB_EARLY_EVENT_BLANK)
+		return NOTIFY_OK;
+
+	if (*blank == FB_BLANK_UNBLANK)
+		sg_policy->is_panel_blank = false;
+	else
+		sg_policy->is_panel_blank = true;
+
+	return NOTIFY_OK;
+}
+
 static int sugov_init(struct cpufreq_policy *policy)
 {
 	struct sugov_policy *sg_policy;
