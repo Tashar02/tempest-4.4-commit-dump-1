@@ -211,7 +211,7 @@ static void split_settled(struct pl_data *chip)
 		if (chip->pl_mode == POWER_SUPPLY_PL_USBIN_USBIN) {
 			pr_debug("pl_disable_votable effective main_psy current_ua =%d \n", pval.intval);
 			if (get_effective_result_locked(chip->pl_disable_votable) && (pval.intval > ONLY_PM660_CURRENT_UA)) {
-				pr_err("pl_disable_votable effective main_psy force current_ua =%d to %d \n", pval.intval, ONLY_PM660_CURRENT_UA);
+				pr_debug("pl_disable_votable effective main_psy force current_ua =%d to %d \n", pval.intval, ONLY_PM660_CURRENT_UA);
 				pval.intval = ONLY_PM660_CURRENT_UA;
 			}
 		}
