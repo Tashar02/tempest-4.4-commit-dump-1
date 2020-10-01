@@ -95,8 +95,6 @@ enum print_reason {
 };
 
 #ifdef CONFIG_MACH_LONGCHEER
-static int debug_mask = 0xff;
-#else
 static int debug_mask;
 #endif
 module_param_named(debug_mask, debug_mask, int, S_IRUSR | S_IWUSR);
