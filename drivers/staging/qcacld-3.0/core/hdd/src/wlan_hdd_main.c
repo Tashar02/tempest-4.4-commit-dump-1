@@ -3798,6 +3798,7 @@ int hdd_wlan_start_modules(struct hdd_context *hdd_ctx, bool reinit)
 		 * to FW when power save isn't enable.
 		 */
 		hdd_spectral_register_to_dbr(hdd_ctx);
+
 #if defined(WLAN_POWER_DEBUG)
 		hdd_sysfs_create_driver_root_obj();
 #endif
