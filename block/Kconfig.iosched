@@ -50,9 +50,22 @@ config CFQ_GROUP_IOSCHED
 	---help---
 	  Enable group IO scheduling in CFQ.
 
+config IOSCHED_ANXIETY
+	tristate "Anxiety I/O Scheduler"
+	default y
+	---help---
+	  Anxiety is a low-latency I/O scheduler designed for use in
+	  embedded devices with flash storage. It attempts to provide
+	  unfair request bias, batching synchronous requests together
+	  at the expense of delaying asyncrhonous requests. By
+	  definition, synchronous requests are essentially "holding up"
+	  the current processes until they are dispatched. By biasing
+	  and batching synchronous requests, process initialization is
+	  expedited.
+
 choice
 	prompt "Default I/O scheduler"
-	default DEFAULT_CFQ
+	default DEFAULT_ANXIETY
 	help
 	  Select the I/O scheduler which will be used by default for all
 	  block devices.
@@ -63,6 +76,9 @@ choice
 	config DEFAULT_CFQ
 		bool "CFQ" if IOSCHED_CFQ=y
 
+	config DEFAULT_ANXIETY
+		bool "Anxiety" if IOSCHED_ANXIETY=y
+
 	config DEFAULT_NOOP
 		bool "No-op"
 
@@ -72,6 +88,7 @@ config DEFAULT_IOSCHED
 	string
 	default "deadline" if DEFAULT_DEADLINE
 	default "cfq" if DEFAULT_CFQ
+	default "anxiety" if DEFAULT_ANXIETY
 	default "noop" if DEFAULT_NOOP
 
 endmenu
