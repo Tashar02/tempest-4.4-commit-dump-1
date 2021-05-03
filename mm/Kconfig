@@ -1,3 +1,5 @@
+menu "Memory Management options"
+
 config SELECT_MEMORY_MODEL
 	def_bool y
 	depends on ARCH_SELECT_MEMORY_MODEL
@@ -743,3 +745,5 @@ config PROCESS_RECLAIM
 	 (addr, addr + size-bytes) of the process.
 
 	 Any other vaule is ignored.
+
+endmenu
