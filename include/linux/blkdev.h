@@ -503,10 +503,10 @@ struct request_queue {
 #define QUEUE_FLAG_FUA	       25	/* device supports FUA writes */
 #define QUEUE_FLAG_FLUSH_NQ    26	/* flush not queueuable */
 
-#define QUEUE_FLAG_DEFAULT	((1 << QUEUE_FLAG_STACKABLE)	|	\
-				 (1 << QUEUE_FLAG_SAME_COMP)	|	\
+#define QUEUE_FLAG_DEFAULT	((1 << QUEUE_FLAG_NONROT)	|	\
 				 (1 << QUEUE_FLAG_SAME_FORCE)	|	\
-				 (0 << QUEUE_FLAG_ADD_RANDOM))
+				 (1 << QUEUE_FLAG_STACKABLE)	|	\
+				 (1 << QUEUE_FLAG_SAME_COMP))
 
 #define QUEUE_FLAG_MQ_DEFAULT	((1 << QUEUE_FLAG_STACKABLE)	|	\
 				 (1 << QUEUE_FLAG_SAME_COMP))
