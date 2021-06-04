@@ -1249,7 +1249,7 @@ static void handle_settled_icl_change(struct pl_data *chip)
 				       POWER_SUPPLY_PROP_TEMP,
 				       &lct_pval);
 		if (rc < 0) {
-			pr_err("Couldn't battery health value rc=%d\n", rc);
+			pr_debug("Couldn't battery health value rc=%d\n", rc);
 			return;
 		}
 		battery_temp = lct_pval.intval;
