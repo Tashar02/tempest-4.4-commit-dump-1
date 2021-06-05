@@ -6,10 +6,12 @@
 ARGS="-nostdlib"
 
 while [ "$1" != "" ] ; do
+	N=""
 	case "$1" in
 	-save-temps|-m32|-m64) N="$1" ;;
 	-r) N="$1" ;;
 	-[Wg]*) N="$1" ;;
+	-maarch64elfb|-maarch64elf) ;;
 	-[olv]|-[Ofd]*|-nostdlib) N="$1" ;;
 	--end-group|--start-group)
 		 N="-Wl,$1" ;;
