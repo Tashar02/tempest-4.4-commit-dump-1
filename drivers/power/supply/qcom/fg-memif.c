@@ -746,7 +746,9 @@ out:
 	return rc;
 }
 
-#ifdef CONFIG_MACH_XIAOMI_TULIP
+#if !defined(CONFIG_MACH_XIAOMI_LAVENDER) ||\
+    !defined(CONFIG_MACH_XIAOMI_WHYRED)   ||\
+    !defined(CONFIG_MACH_XIAOMI_WAYNE)
 int fg_dma_mem_req(struct fg_chip *chip, bool request)
 {
 	int ret, rc = 0, retry_count  = RETRY_COUNT;
