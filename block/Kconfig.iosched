@@ -5,7 +5,7 @@ menu "IO Schedulers"
 config IOSCHED_NOOP
 	bool
 	default y
-	---help---
+	help
 	  The no-op I/O scheduler is a minimal scheduler that does basic merging
 	  and sorting. Its main uses include non-disk based block devices like
 	  memory devices, and specialised software or hardware environments
@@ -16,7 +16,7 @@ config IOSCHED_TEST
 	tristate "Test I/O scheduler"
 	depends on DEBUG_FS
 	default m
-	---help---
+	help
 	  The test I/O scheduler is a duplicate of the noop scheduler with
 	  addition of test utlity.
 	  It allows testing a block device by dispatching specific requests
@@ -26,7 +26,7 @@ config IOSCHED_TEST
 config IOSCHED_CFQ
 	tristate "CFQ I/O scheduler"
 	default y
-	---help---
+	help
 	  The CFQ I/O scheduler tries to distribute bandwidth equally
 	  among all processes in the system. It should provide a fair
 	  and low latency working environment, suitable for both desktop
@@ -38,13 +38,13 @@ config CFQ_GROUP_IOSCHED
 	bool "CFQ Group Scheduling support"
 	depends on IOSCHED_CFQ && BLK_CGROUP
 	default n
-	---help---
+	help
 	  Enable group IO scheduling in CFQ.
 
 config IOSCHED_ANXIETY
 	tristate "Anxiety I/O Scheduler"
 	default y
-	---help---
+	help
 	  The purpose of Anxiety is to improve throughput on latency-sensitive
 	  tasks on embedded flash storage devices. On modern devices, embedded
 	  systems contain relatively fast storage, so spending too much time
