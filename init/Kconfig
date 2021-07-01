@@ -1441,6 +1441,22 @@ config CC_OPTIMIZE_FOR_SIZE
 
 endchoice
 
+config LLVM_POLLY
+	bool "Enable LLVM's polyhedral loop optimizer (Polly)"
+	help
+	  This option enables LLVM's polyhedral loop optimizer known as Polly.
+	  Polly is able to optimize various loops throughout the kernel for
+	  maximum cache locality. This requires an LLVM toolchain explicitly
+	  compiled with Polly support.
+
+config GCC_GRAPHITE
+	bool "Enables GCC's Graphite Optimizations"
+	help
+	  This option enables GCC's Graphite Optimizations.
+	  GCC with Graphite enabled is able to optimize various loops
+	  throughout the kernel. This requires an GCC to be explicitly
+	  compiled with Graphite support.
+
 config SYSCTL
 	bool
 
