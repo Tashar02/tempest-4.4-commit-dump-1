@@ -104,7 +104,6 @@ modpost_link()
 	if [ -n "${CONFIG_THIN_ARCHIVES}" ]; then
 		objects="--whole-archive				\
 			built-in.o					\
-			--no-whole-archive				\
 			--start-group					\
 			${KBUILD_VMLINUX_LIBS}				\
 			--end-group"
@@ -116,7 +115,7 @@ modpost_link()
 			--end-group"
 	fi
 
-	if [ -n "${CONFIG_LTO_CLANG}" ]; then
+	if [ -n "${CONFIG_LTO}" ]; then
 		# This might take a while, so indicate that we're doing
 		# an LTO link
 		info LTO vmlinux.o
@@ -124,7 +123,7 @@ modpost_link()
 		info LD vmlinux.o
 	fi
 
-	${LD} ${LDFLAGS} -r -o ${1} $(lto_lds) ${objects}
+	${LDFINAL} ${LDFLAGS} -r -o ${1} $(lto_lds) ${objects}
 }
 
 # If CONFIG_LTO_CLANG is selected, we postpone running recordmcount until
@@ -149,7 +148,7 @@ vmlinux_link()
 	local objects
 
 	if [ "${SRCARCH}" != "um" ]; then
-		local ld=${LD}
+		local ld=${LDFINAL}
 		local ldflags="${LDFLAGS} ${LDFLAGS_vmlinux}"
 
 		if [ -n "${LDFINAL_vmlinux}" ]; then
@@ -160,7 +159,6 @@ vmlinux_link()
 		if [[ -n "${CONFIG_THIN_ARCHIVES}" && -z "${CONFIG_LTO_CLANG}" ]]; then
 			objects="--whole-archive 			\
 				built-in.o				\
-				--no-whole-archive			\
 				--start-group				\
 				${KBUILD_VMLINUX_LIBS}			\
 				--end-group				\
@@ -179,7 +177,6 @@ vmlinux_link()
 		if [ -n "${CONFIG_THIN_ARCHIVES}" ]; then
 			objects="-Wl,--whole-archive			\
 				built-in.o				\
-				-Wl,--no-whole-archive			\
 				-Wl,--start-group			\
 				${KBUILD_VMLINUX_LIBS}			\
 				-Wl,--end-group				\
