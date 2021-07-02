@@ -147,7 +147,7 @@ static uint32_t msm_lmh_mitigation_notify(struct msm_lmh_dcvs_hw *hw)
 	rcu_read_unlock();
 	max_limit = FREQ_HZ_TO_KHZ(freq_val);
 
-	trace_lmh_dcvs_freq(cpumask_first(&hw->core_map), max_limit);
+//	trace_lmh_dcvs_freq(cpumask_first(&hw->core_map), max_limit);
 
 notify_exit:
 	hw->hw_freq_limit = max_limit;
@@ -466,6 +466,11 @@ static int msm_lmh_dcvs_probe(struct platform_device *pdev)
 		 MSM_LIMITS_ALGO_MODE_ENABLE, 1, 0, 0);
 	if (ret)
 		return ret;
+
+        if (!IS_ENABLED(CONFIG_QCOM_THERMAL_LIMITS_DCVS)) {
+                devm_kfree(&pdev->dev, hw);
+                return 0;
+        }
 
 	hw->default_lo.temp = MSM_LIMITS_ARM_THRESHOLD_VAL;
 	hw->default_lo.trip = THERMAL_TRIP_CONFIGURABLE_LOW;
