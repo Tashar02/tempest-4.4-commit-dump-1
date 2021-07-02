@@ -1,5 +1,4 @@
 /* Copyright (c) 2015-2020, The Linux Foundation. All rights reserved.
- * Copyright (C) 2019 XiaoMi, Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -1349,10 +1348,7 @@ static void update_speaker_earpiece_gain(int vol_boost)
 static ssize_t headphone_gain_show(struct kobject *kobj,
 		struct kobj_attribute *attr, char *buf)
 {
-	return snprintf(buf, PAGE_SIZE, "%d %d\n",
-		snd_soc_read(sound_control_codec_ptr, MSM89XX_CDC_CORE_RX1_VOL_CTL_B2_CTL),
-		snd_soc_read(sound_control_codec_ptr, MSM89XX_CDC_CORE_RX2_VOL_CTL_B2_CTL)
-	);
+	return snprintf(buf, PAGE_SIZE, "%d %d\n", headphones_boost_l, headphones_boost_r);
 }
 
 static ssize_t headphone_gain_store(struct kobject *kobj,
@@ -1362,15 +1358,23 @@ static ssize_t headphone_gain_store(struct kobject *kobj,
 	int input_l, input_r;
 
 	sscanf(buf, "%d %d", &input_l, &input_r);
+	if ((input_l != headphones_boost_l) || (input_r != headphones_boost_r)) {
+		if (input_l < headphones_boost_min)
+			input_l = headphones_boost_min;
+		if (input_l > headphones_boost_limit)
+			input_l = headphones_boost_limit;
+		if (input_r < headphones_boost_min)
+			input_r = headphones_boost_min;
+		if (input_r > headphones_boost_limit)
+			input_r = headphones_boost_limit;
 
-	if (input_l < -40 || input_l > 20)
-		input_l = 0;
+		pr_info("New headphones_boost: Left: %d Right: %d\n", input_l, input_r);
 
-	if (input_r < -40 || input_r > 20)
-		input_r = 0;
+		headphones_boost_l = input_l;
+		headphones_boost_r = input_r;
 
-	snd_soc_write(sound_control_codec_ptr, MSM89XX_CDC_CORE_RX1_VOL_CTL_B2_CTL, input_l);
-	snd_soc_write(sound_control_codec_ptr, MSM89XX_CDC_CORE_RX2_VOL_CTL_B2_CTL, input_r);
+		update_headphones_volume_boost(headphones_boost_l, headphones_boost_r);
+	}
 
 	return count;
 }
@@ -1383,20 +1387,29 @@ static struct kobj_attribute headphone_gain_attribute =
 static ssize_t mic_gain_show(struct kobject *kobj,
 		struct kobj_attribute *attr, char *buf)
 {
-	return snprintf(buf, PAGE_SIZE, "%d\n",
-		snd_soc_read(sound_control_codec_ptr, MSM89XX_CDC_CORE_TX1_VOL_CTL_GAIN));
+	return snprintf(buf, PAGE_SIZE, "%d\n", mic_boost);
 }
- static ssize_t mic_gain_store(struct kobject *kobj,
+static ssize_t mic_gain_store(struct kobject *kobj,
 		struct kobj_attribute *attr, const char *buf, size_t count)
 {
 	int input;
  	sscanf(buf, "%d", &input);
- 	if (input < -10 || input > 20)
-		input = 15;
- 	snd_soc_write(sound_control_codec_ptr, MSM89XX_CDC_CORE_TX1_VOL_CTL_GAIN, input);
+ 	if (input != mic_boost) {
+		if (input < mic_boost_min)
+			input = mic_boost_min;
+
+		if (input > mic_boost_limit)
+			input = mic_boost_limit;
+
+		pr_info("New mic_boost: %d\n", input);
+
+		mic_boost = input;
+
+		update_mic_gain(mic_boost);
+	}
  	return count;
 }
- static struct kobj_attribute mic_gain_attribute =
+static struct kobj_attribute mic_gain_attribute =
 	__ATTR(mic_gain, 0664,
 		mic_gain_show,
 		mic_gain_store);
@@ -1892,7 +1905,7 @@ static const struct snd_soc_dapm_widget msm_dig_dapm_widgets[] = {
 	SND_SOC_DAPM_AIF_OUT("I2S TX2", "AIF1 Capture", 0, SND_SOC_NOPM, 0, 0),
 	SND_SOC_DAPM_AIF_OUT("I2S TX3", "AIF1 Capture", 0, SND_SOC_NOPM, 0, 0),
 	SND_SOC_DAPM_AIF_OUT("I2S TX4", "AIF1 Capture", 0, SND_SOC_NOPM, 0, 0),
-#ifdef CONFIG_MACH_XIAOMI_SDM660
+#ifdef CONFIG_MACH_LONGCHEER
 	SND_SOC_DAPM_AIF_OUT("I2S TX5", "AIF2 Capture", 0, SND_SOC_NOPM, 0, 0),
 #else
 	SND_SOC_DAPM_AIF_OUT("I2S TX5", "AIF1 Capture", 0, SND_SOC_NOPM, 0, 0),
@@ -2093,7 +2106,6 @@ static const struct snd_kcontrol_new msm_dig_snd_controls[] = {
 	SOC_SINGLE_SX_TLV("RX3 Digital Volume",
 		MSM89XX_CDC_CORE_RX3_VOL_CTL_B2_CTL,
 		0, -84, 40, digital_gain),
-
 #endif
 
 	SOC_SINGLE_EXT("IIR1 Enable Band1", IIR1, BAND1, 1, 0,

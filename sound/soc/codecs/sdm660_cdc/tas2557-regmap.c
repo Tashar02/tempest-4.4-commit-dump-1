@@ -1,7 +1,6 @@
 /*
 ** =============================================================================
 ** Copyright (c) 2016  Texas Instruments Inc.
-** Copyright (C) 2019 XiaoMi, Inc.
 **
 ** This program is free software; you can redistribute it and/or modify it under
 ** the terms of the GNU General Public License as published by the Free Software
@@ -22,7 +21,6 @@
 
 #ifdef CONFIG_TAS2557_REGMAP
 
-#define DEBUG
 #include <linux/module.h>
 #include <linux/moduleparam.h>
 #include <linux/init.h>
@@ -352,11 +350,9 @@ void tas2557_enableIRQ(struct tas2557_priv *pTAS2557, bool enable, bool startup_
 			}
 		}
 	} else {
-		if (pTAS2557->mbIRQEnable) {
-			if (gpio_is_valid(pTAS2557->mnGpioINT))
-				disable_irq_nosync(pTAS2557->mnIRQ);
-			pTAS2557->mbIRQEnable = false;
-		}
+		if (gpio_is_valid(pTAS2557->mnGpioINT))
+			disable_irq_nosync(pTAS2557->mnIRQ);
+		pTAS2557->mbIRQEnable = false;
 	}
 }
 
@@ -392,6 +388,9 @@ static void irq_work_routine(struct work_struct *work)
 #ifdef CONFIG_TAS2557_MISC
 	mutex_lock(&pTAS2557->file_lock);
 #endif
+
+	if(pTAS2557->mnErrCode & ERROR_FAILSAFE)
+		goto program;
 
 	if (pTAS2557->mbRuntimeSuspend) {
 		dev_info(pTAS2557->dev, "%s, Runtime Suspended\n", __func__);
@@ -470,7 +469,6 @@ static void irq_work_routine(struct work_struct *work)
 
 		goto program;
 	} else {
-		dev_dbg(pTAS2557->dev, "IRQ Status: 0x%x, 0x%x\n", nDevInt1Status, nDevInt2Status);
 		nCounter = 2;
 		while (nCounter > 0) {
 			nResult = tas2557_dev_read(pTAS2557, TAS2557_POWER_UP_FLAG_REG, &nDevPowerUpFlag);
@@ -498,8 +496,6 @@ static void irq_work_routine(struct work_struct *work)
 		}
 		pTAS2557->mnErrCode &= ~ERROR_CLASSD_PWR;
 
-		dev_dbg(pTAS2557->dev, "%s: INT1=0x%x, INT2=0x%x; PowerUpFlag=0x%x\n",
-			__func__, nDevInt1Status, nDevInt2Status, nDevPowerUpFlag);
 		goto end;
 	}
 
@@ -549,7 +545,8 @@ static enum hrtimer_restart temperature_timer_func(struct hrtimer *timer)
 static void timer_work_routine(struct work_struct *work)
 {
 	struct tas2557_priv *pTAS2557 = container_of(work, struct tas2557_priv, mtimerwork);
-	int nResult, nTemp, nActTemp;
+	int nResult, nActTemp;
+	int nTemp = 0;
 	struct TProgram *pProgram;
 	static int nAvg;
 
@@ -590,8 +587,8 @@ static void timer_work_routine(struct work_struct *work)
 		if (!(pTAS2557->mnDieTvReadCounter % LOW_TEMPERATURE_COUNTER)) {
 			nAvg /= LOW_TEMPERATURE_COUNTER;
 			dev_dbg(pTAS2557->dev, "check : avg=%d\n", nAvg);
-			if ((nAvg & 0x80000000) != 0) {
-				/* if Die temperature is below ZERO */
+			if (nAvg < -6) {
+				/* if Die temperature is below -6 degree C */
 				if (pTAS2557->mnDevCurrentGain != LOW_TEMPERATURE_GAIN) {
 					nResult = tas2557_set_DAC_gain(pTAS2557, LOW_TEMPERATURE_GAIN);
 					if (nResult < 0)
@@ -759,6 +756,8 @@ static int tas2557_i2c_probe(struct i2c_client *pClient,
 	pTAS2557->hw_reset = tas2557_hw_reset;
 	pTAS2557->runtime_suspend = tas2557_runtime_suspend;
 	pTAS2557->runtime_resume = tas2557_runtime_resume;
+	pTAS2557->mnRestart = 0;
+	pTAS2557->mnEdge = 4;
 
 	mutex_init(&pTAS2557->dev_lock);
 
@@ -841,8 +840,8 @@ static int tas2557_i2c_probe(struct i2c_client *pClient,
 	nResult = request_firmware_nowait(THIS_MODULE, 1, pFWName,
 		pTAS2557->dev, GFP_KERNEL, pTAS2557, tas2557_fw_ready);
 
-	return nResult;
 err:
+
 	return nResult;
 }
 
