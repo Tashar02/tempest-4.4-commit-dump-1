@@ -21,12 +21,6 @@ menu "Xiaomi board selection"
 		help
 		  Support for Mi boards
 
-	config MACH_XIAOMI_JASON
-		bool "Xiaomi jason board"
-		select MACH_MI
-		help
-		  Support for Xiaomi Mi Note 3
-
 	config MACH_LONGCHEER
 		bool "Longcheer board"
 		select MACH_XIAOMI_SDM660
