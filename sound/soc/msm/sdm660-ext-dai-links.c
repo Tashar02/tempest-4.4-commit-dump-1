@@ -275,7 +275,7 @@ static struct snd_soc_ops msm_tdm_be_ops = {
 static int msm_fe_qos_prepare(struct snd_pcm_substream *substream)
 {
 	cpumask_t mask;
-
+	
 	if (pm_qos_request_active(&substream->latency_pm_qos_req))
 		pm_qos_remove_request(&substream->latency_pm_qos_req);
 

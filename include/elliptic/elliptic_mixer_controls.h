@@ -1,9 +1,10 @@
+// SPDX-License-Identifier: GPL-2.0-only
+
 #pragma once
 #include <sound/core.h>
 #include <sound/pcm.h>
 #include <sound/soc.h>
 #include <linux/types.h>
-
 
 #define ELLIPTIC_OBJ_ID_CALIBRATION_DATA 1
 #define ELLIPTIC_OBJ_ID_VERSION_INFO 2
@@ -32,21 +33,20 @@
 #define ELLIPTIC_ULTRASOUND_GET_PARAMS			3
 #define ELLIPTIC_ULTRASOUND_RAMP_DOWN			4
 
-/** register */
+// register
 #define ELLIPTIC_CALIBRATION				1
-/** bits */
+// bits
 #define ELLIPTIC_CALIBRATION_STATE			0
 #define ELLIPTIC_CALIBRATION_PROFILE		1
 #define ELLIPTIC_ULTRASOUND_GAIN			2
 
-/** custom settings */
+// custom settings
 #define ELLIPTIC_SYSTEM_CONFIGURATION_CUSTOM_SETTING_COUNT 16
 #define ELLIPTIC_SYSTEM_CONFIGURATION_CUSTOM_SETTING_MAX_VALUE 0x7FFFFFFF
 
-
-/** register */
+// register
 #define ELLIPTIC_SYSTEM_CONFIGURATION			0
-/** bits */
+// bits
 #define ELLIPTIC_SYSTEM_CONFIGURATION_LATENCY		0
 #define ELLIPTIC_SYSTEM_CONFIGURATION_SENSITIVITY	1
 #define ELLIPTIC_SYSTEM_CONFIGURATION_SPEAKER_SCALING	2
@@ -54,6 +54,7 @@
 #define ELLIPTIC_SYSTEM_CONFIGURATION_OPERATION_MODE		4
 #define ELLIPTIC_SYSTEM_CONFIGURATION_OPERATION_MODE_FLAGS	5
 #define ELLIPTIC_SYSTEM_CONFIGURATION_LOG_LEVEL	6
+
 #define ELLIPTIC_SYSTEM_CONFIGURATION_CUSTOM_SETTING_0	7
 #define ELLIPTIC_SYSTEM_CONFIGURATION_CUSTOM_SETTING_1	8
 #define ELLIPTIC_SYSTEM_CONFIGURATION_CUSTOM_SETTING_2	9
@@ -81,9 +82,7 @@
 #define ELLIPTIC_SYSTEM_CONFIGURATION_CONTEXT 30
 #define ELLIPTIC_SYSTEM_CONFIGURATION_CAPTURE 31
 #define ELLIPTIC_SYSTEM_CONFIGURATION_INPUT_CHANNELS 32
-
 #define ELLIPTIC_SYSTEM_CONFIGURATION_MAX_CONTEXT_VALUE 0x7FFFFFFF
-
 
 struct elliptic_engine_version_info {
 	uint32_t major;
@@ -106,7 +105,6 @@ unsigned int elliptic_add_platform_controls(void *platform);
 void elliptic_set_calibration_data(uint8_t *calib_data, size_t size);
 
 enum elliptic_system_configuration_parameter_type {
-
 	ESCPT_SPEAKER_SCALING = 1,
 	ESCPT_CHANNEL_SENSITIVITY,
 	ESCPT_LATENCY,
@@ -120,7 +118,6 @@ enum elliptic_system_configuration_parameter_type {
 	ESCPT_ULTRASOUND_GAIN,
 	ESCPT_LOG_LEVEL,
 	ESCPT_BUILD_BRANCH,
-	
 	ESCPT_FSELECTION,
 	ESCPT_ENGINE_DIAGNOSTICS,
 	ESCPT_ENGINE_CUSTOM_SETTING_0,
@@ -177,7 +174,6 @@ struct elliptic_system_configuration_parameters_cache {
 	int32_t capture;
 	int32_t input_channels;
 };
-
 
 int elliptic_trigger_version_msg(void);
 

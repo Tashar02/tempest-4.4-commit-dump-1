@@ -1,8 +1,6 @@
-/**
-* Copyright Elliptic Labs 2015-2016
-* Copyright (C) 2019 XiaoMi, Inc.
-*
-*/
+// Copyright Elliptic Labs 2015-2016
+// Copyright (C) 2019 XiaoMi, Inc.
+// SPDX-License-Identifier: GPL-2.0
 
 #pragma once
 
@@ -103,7 +101,6 @@ struct elliptic_data {
 };
 
 /* Elliptic IO module API (implemented by IO module)*/
-
 int elliptic_data_io_initialize(void);
 int elliptic_data_io_cleanup(void);
 
@@ -112,7 +109,6 @@ int32_t elliptic_data_io_write(uint32_t message_id, const char *data,
 
 int32_t elliptic_data_io_transact(uint32_t message_id, const char *data,
 	size_t data_size, char *output_data, size_t output_data_size);
-
 
 /* Elliptic driver API (implemented by main driver)*/
 int elliptic_data_initialize(struct elliptic_data *,
@@ -159,4 +155,3 @@ int elliptic_userspace_ctrl_driver_init(void);
 void elliptic_userspace_ctrl_driver_exit(void);
 int32_t elliptic_userspace_ctrl_write(uint32_t message_id,
     const char *data, size_t data_size);
-
