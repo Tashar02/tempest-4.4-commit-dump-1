@@ -1,6 +1,4 @@
-/**
- * Elliptic Labs
- */
+// SPDX-License-Identifier: GPL-2.0-only
 
 #include <linux/slab.h>
 #include <linux/wait.h>
@@ -37,8 +35,6 @@ struct driver_sensor_event {
 		int32_t reserved[2];
 	};
 };
-
-
 
 static int afe_set_parameter(int port,
 		int param_id,

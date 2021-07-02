@@ -135,7 +135,7 @@
 
 #define CALCULATE_VOUT_D(req_mv) (((req_mv - 650) * 10) / 25)
 
-static int cpe_debug_mode;
+static int cpe_debug_mode = 0;
 
 #define TASHA_MAX_MICBIAS 4
 #define DAPM_MICBIAS1_STANDALONE "MIC BIAS1 Standalone"
@@ -2580,6 +2580,7 @@ static int slim_tx_mixer_put(struct snd_kcontrol *kcontrol,
 		if (dai_id >= ARRAY_SIZE(vport_i2s_check_table)) {
 			dev_err(codec->dev, "%s: dai_id: %d, out of bounds\n",
 				__func__, dai_id);
+			mutex_unlock(&tasha_p->codec_mutex);
 			return -EINVAL;
 		}
 		vtable = vport_i2s_check_table[dai_id];
