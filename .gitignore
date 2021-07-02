@@ -51,8 +51,6 @@ Module.symvers
 /vmlinuz
 /System.map
 /Module.markers
-out
-sdm660.sh
 
 #
 # Debian directory (make deb-pkg)
@@ -123,3 +121,13 @@ android/configs/android-*.cfg
 #Ignoring Android.bp link file
 #
 Android.bp
+
+#
+# Ignore build scripts and respective dir
+#
+*.sh
+/out
+/wayne
+/tulip
+/lavender
+/whyred
