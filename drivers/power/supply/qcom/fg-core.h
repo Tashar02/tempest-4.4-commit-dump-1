@@ -476,6 +476,9 @@ struct fg_chip {
 	bool			battery_missing;
 	bool			fg_restarting;
 	bool			charge_full;
+#if defined(CONFIG_MACH_XIAOMI_LAVENDER) || defined(CONFIG_MACH_XIAOMI_WAYNE)
+	bool			report_full;
+#endif
 	bool			recharge_soc_adjusted;
 	bool			ki_coeff_dischg_en;
 	bool			esr_fcc_ctrl_en;
@@ -485,23 +488,11 @@ struct fg_chip {
 	bool			use_ima_single_mode;
 	bool			qnovo_enable;
 	bool			suspended;
-#if defined(CONFIG_MACH_XIAOMI_LAVENDER) || defined(CONFIG_MACH_XIAOMI_WAYNE) || defined(CONFIG_MACH_MI)
-	bool			report_full;
-#endif
-#ifdef CONFIG_MACH_MI
-	bool			empty_restart_fg;
-	struct batt_params	param;
-	struct delayed_work	soc_monitor_work;
-	struct delayed_work	soc_work;
-	struct delayed_work	empty_restart_fg_work;
-#endif
-
 	struct completion	soc_update;
 	struct completion	soc_ready;
 	struct delayed_work	profile_load_work;
 	struct work_struct	status_change_work;
 	struct delayed_work	ttf_work;
-	struct delayed_work	esr_timer_config_work;
 	struct delayed_work	sram_dump_work;
 	struct work_struct	esr_filter_work;
 	struct alarm		esr_filter_alarm;
