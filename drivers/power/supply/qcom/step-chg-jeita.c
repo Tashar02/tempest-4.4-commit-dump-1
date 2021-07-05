@@ -120,38 +120,39 @@ static struct jeita_fcc_cfg jeita_fcc_config = {
 	.prop_name	= "BATT_TEMP",
 #ifdef CONFIG_MACH_LONGCHEER
 	.hysteresis	= 0, /* 1degC hysteresis */
-#else
-	.hysteresis	= 10, /* 1degC hysteresis */
 #endif
 	.fcc_cfg	= {
 		/* TEMP_LOW	TEMP_HIGH	FCC */
 #ifdef CONFIG_MACH_LONGCHEER
 #if defined(CONFIG_MACH_XIAOMI_WAYNE)
-		{0,		50,		300000},
-		{51,		150,		900000},
-		{151,		450,		2900000},
-		{451,		600,		1500000},
+		{0,		 50,		 400000},
+		{51,		150,		1200000},
+		{151,		400,		2500000},
+		{401,		430,		1500000},
+		{431,		450,		1000000},
+		{451,		600,		 800000},
 #elif defined(CONFIG_MACH_XIAOMI_LAVENDER)
-		{0,		50,		400000},
+		{0,		 50,		 400000},
 		{51,		150,		1200000},
-		{151,		450,		2900000},
-		{451,		600,		2000000},
+		{151,		400,		2500000},
+		{401,		430,		1500000},
+		{431,		450,		1000000},
+		{451,		600,		 800000},
 #elif defined(CONFIG_MACH_XIAOMI_WHYRED)
-		{0,		50,		400000},
+		{0,		 50,		 400000},
 		{51,		150,		1200000},
-		{151,		450,		2500000},
-		{451,		600,		1200000},
+		{151,		400,		2000000},
+		{401,		430,		1500000},
+		{431,		450,		1000000},
+		{451,		600,		 600000},
 #elif defined(CONFIG_MACH_XIAOMI_TULIP)
-		{0,		50,		400000},
+		{0,		 50,		 400000},
 		{51,		150,		1200000},
-		{151,		450,		2500000},
-		{451,		600,		2000000},
+		{151,		400,		2000000},
+		{401,		430,		1500000},
+		{431,		450,		1000000},
+		{451,		600,		 600000},
 #endif
-#else
-		{0,		100,		600000},
-		{101,		200,		2000000},
-		{201,		450,		3000000},
-		{451,		550,		600000},
 #endif
 	},
 };
@@ -161,8 +162,6 @@ static struct jeita_fv_cfg jeita_fv_config = {
 	.prop_name	= "BATT_TEMP",
 #ifdef CONFIG_MACH_LONGCHEER
 	.hysteresis	= 0, /* 1degC hysteresis */
-#else
-	.hysteresis	= 10, /* 1degC hysteresis */
 #endif
 	.fv_cfg		= {
 #ifdef CONFIG_MACH_LONGCHEER
@@ -170,11 +169,6 @@ static struct jeita_fv_cfg jeita_fv_config = {
 		{0,	150,		4400000},
 		{151,	450,		4400000},
 		{451,	600,		4100000},
-#else
-		/* TEMP_LOW	TEMP_HIGH	FCC */
-		{0,		100,		4200000},
-		{101,		450,		4400000},
-		{451,		550,		4200000},
 #endif
 	},
 };
