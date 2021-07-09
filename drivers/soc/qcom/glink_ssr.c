@@ -32,8 +32,6 @@
 #define GLINK_SSR_LOG(x...)
 #define GLINK_SSR_ERR(x...)
 
-static void *glink_ssr_log_ctx;
-
 /* Global restart counter */
 static uint32_t sequence_number;
 

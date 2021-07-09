@@ -24,8 +24,6 @@
 /* Number of internal IPC Logging log pages */
 #define GLINK_LBSRV_NUM_LOG_PAGES	3
 
-static void *glink_lbsrv_log_ctx;
-
 #define GLINK_LBSRV_IPC_LOG_STR(x...)
 #define LBSRV_INFO(x...)
 #define LBSRV_ERR(x...) 
@@ -559,7 +557,6 @@ static void glink_lbsrv_free_data(void *data, uint32_t buf_type)
 static void *copy_linear_data(struct rx_work_info *tmp_rx_work_info)
 {
 	char *data;
-	struct ch_info *rx_ch_info = tmp_rx_work_info->rx_ch_info;
 
 	data = kmalloc(tmp_rx_work_info->size, GFP_KERNEL);
 	if (data)
@@ -574,7 +571,6 @@ static void *copy_linear_data(struct rx_work_info *tmp_rx_work_info)
 static void *copy_vector_data(struct rx_work_info *tmp_rx_work_info)
 {
 	uint32_t num_bufs = 0;
-	struct ch_info *rx_ch_info = tmp_rx_work_info->rx_ch_info;
 	struct lbsrv_vec *tmp_vec_info;
 	void *buf, *pbuf, *dest_buf;
 	size_t offset = 0;
@@ -801,7 +797,6 @@ void glink_lpbsrv_notify_rx_tp(void *handle, const void *priv,
 void glink_lpbsrv_notify_tx_done(void *handle, const void *priv,
 				 const void *pkt_priv, const void *ptr)
 {
-	struct ch_info *tx_done_ch_info = (struct ch_info *)priv;
 	LBSRV_INFO("%s:%s:%s %s: end (Success) TX_DONE ptr[%p]\n",
 			tx_done_ch_info->transport, tx_done_ch_info->edge,
 			tx_done_ch_info->name, __func__, ptr);
