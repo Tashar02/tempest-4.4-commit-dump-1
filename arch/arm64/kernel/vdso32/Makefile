@@ -74,6 +74,11 @@ VDSO_CFLAGS += -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
                -Werror-implicit-function-declaration \
                -Wno-format-security \
                -std=gnu89
+ifeq ($(cc-name),gcc)
+VDSO_CFLAGS  += -O3
+else
+VDSO_CFLAGS  += -O2
+endif
 ifeq ($(cc-name),clang)
 VDSO_CFLAGS  += -O3
 else
