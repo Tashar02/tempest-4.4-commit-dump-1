@@ -2676,7 +2676,7 @@ int usb_bam_disconnect_ipa(enum usb_ctrl cur_bam,
 	u8 idx = 0;
 	struct usb_bam_ctx_type *ctx = &msm_usb_bam[cur_bam];
 	struct usb_bam_pipe_connect *pipe_connect;
-	struct device *bam_dev = &ctx->usb_bam_pdev->dev;
+//	struct device *bam_dev = &ctx->usb_bam_pdev->dev;
 	enum usb_bam_mode bam_mode;
 
 	if (!is_ipa_handle_valid(ipa_params->prod_clnt_hdl) &&
@@ -3059,7 +3059,7 @@ static int enable_usb_bam(struct platform_device *pdev)
 {
 	int ret;
 	struct usb_bam_ctx_type *ctx = dev_get_drvdata(&pdev->dev);
-	enum usb_ctrl bam_type = ctx->usb_bam_data->bam_type;
+//	enum usb_ctrl bam_type = ctx->usb_bam_data->bam_type;
 
 	ret = usb_bam_init(pdev);
 	if (ret) {

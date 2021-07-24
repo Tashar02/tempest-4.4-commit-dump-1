@@ -362,7 +362,7 @@ static void sde_hw_rotator_disable_irq(struct sde_hw_rotator *rot)
  */
 static void sde_hw_rotator_dump_status(struct sde_hw_rotator *rot)
 {
-	struct sde_rot_data_type *mdata = sde_rot_get_mdata();
+//	struct sde_rot_data_type *mdata = sde_rot_get_mdata();
 
 	SDEROT_ERR(
 		"op_mode = %x, int_en = %x, int_status = %x\n",
