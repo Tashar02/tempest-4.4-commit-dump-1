@@ -303,8 +303,8 @@ CONFIG_SHELL := $(shell if [ -x "$$BASH" ]; then echo $$BASH; \
 
 HOSTCC       = gcc
 HOSTCXX      = g++
-HOSTCFLAGS   := -Wall -Wmissing-prototypes -Wstrict-prototypes -O3 -fomit-frame-pointer -std=gnu89 -pipe
-HOSTCXXFLAGS = -O3
+HOSTCFLAGS   := -Wall -Wmissing-prototypes -Wstrict-prototypes -O2 -fomit-frame-pointer -std=gnu89 -pipe
+HOSTCXXFLAGS = -O2
 
 # Decide whether to build built-in, modular, or both.
 # Normally, just do built-in.
@@ -615,7 +615,7 @@ KBUILD_AFLAGS	+= $(call cc-option,-fno-PIE)
 ifeq ($(cc-name),clang)
 ifneq ($(CROSS_COMPILE),)
 CLANG_TRIPLE	?= $(CROSS_COMPILE)
-CLANG_FLAGS    += --target=$(notdir $(CLANG_TRIPLE:%-=%))
+CLANG_FLAGS	+= --target=$(notdir $(CLANG_TRIPLE:%-=%))
 ifeq ($(shell $(srctree)/scripts/clang-android.sh $(CC) $(CLANG_FLAGS)), y)
 $(error "Clang with Android --target detected. Did you specify CLANG_TRIPLE?")
 endif
@@ -631,7 +631,7 @@ ifeq ($(ld-name),lld)
 CLANG_FLAGS	+= -fuse-ld=$(shell which $(LD))
 endif
 KBUILD_CPPFLAGS	+= -Qunused-arguments
-CLANG_FLAGS    += $(call cc-option, -Wno-bool-operation)
+CLANG_FLAGS	+= $(call cc-option, -Wno-bool-operation)
 KBUILD_CFLAGS	+= $(CLANG_FLAGS)
 KBUILD_AFLAGS	+= $(CLANG_FLAGS) -no-integrated-as
 ifeq ($(ld-name),lld)
@@ -670,9 +670,9 @@ KBUILD_CFLAGS	+= $(LTO_CFLAGS)
 LTO_LDFLAGS		:= $(LTO_CFLAGS) -Wno-lto-type-mismatch -Wno-psabi \
 				-Wno-stringop-overflow -Wno-stringop-overread \
 				-flinker-output=nolto-rel
-LDFINAL			:= $(CONFIG_SHELL) $(srctree)/scripts/gcc-ld $(LTO_LDFLAGS)
-AR				:= $(CROSS_COMPILE)gcc-ar
-NM				:= $(CROSS_COMPILE)gcc-nm
+LDFINAL		:= $(CONFIG_SHELL) $(srctree)/scripts/gcc-ld $(LTO_LDFLAGS)
+AR			:= $(CROSS_COMPILE)gcc-ar
+NM			:= $(CROSS_COMPILE)gcc-nm
 DISABLE_LTO		:= -fno-lto
 export DISABLE_LTO LDFINAL
 else
@@ -699,25 +699,16 @@ KBUILD_CFLAGS	+= $(call cc-disable-warning, restrict)
 KBUILD_CFLAGS	+= $(call cc-disable-warning, stringop-overflow)
 KBUILD_CFLAGS	+= $(call cc-disable-warning, stringop-overread)
 KBUILD_CFLAGS	+= $(call cc-disable-warning, zero-length-bounds)
-KBUILD_CFLAGS   += $(call cc-option, -Wno-misleading-indentation)
+KBUILD_CFLAGS	+= $(call cc-option, -Wno-misleading-indentation)
 ifdef CONFIG_LD_DEAD_CODE_DATA_ELIMINATION
 KBUILD_CFLAGS	+= $(call cc-option,-ffunction-sections,)
 KBUILD_CFLAGS	+= $(call cc-option,-fdata-sections,)
 endif
 
-ifdef CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE
-KBUILD_CFLAGS	+= -O3
+ifdef CONFIG_CC_OPTIMIZE_FOR_SIZE
+KBUILD_CFLAGS	+= -Os
 else
-KBUILD_CFLAGS	+= -O2
-endif
-
-ifeq ($(cc-name),gcc)
 KBUILD_CFLAGS	+= -O3
-KBUILD_CFLAGS	+= -mcpu=cortex-a73.cortex-a53 -mtune=cortex-a73.cortex-a53 -march=armv8-a+crc+crypto
-endif
-ifeq ($(cc-name),clang)
-KBUILD_CFLAGS	+= -O3
-KBUILD_CFLAGS	+= -mcpu=cortex-a53 -mtune=cortex-a53 -march=armv8-a+crc+crypto
 endif
 
 ifdef CONFIG_CC_WERROR
