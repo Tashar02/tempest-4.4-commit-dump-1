@@ -365,7 +365,7 @@ static int probe(struct platform_device *pdev)
 		goto no_spdm_device;
 	}
 
-#ifdef DEBUG_FS
+#ifdef CONFIG_DEBUG_FS
 #ifdef CONFIG_IPC_LOGGING
 	spdm_init_debugfs(&pdev->dev);
 #endif

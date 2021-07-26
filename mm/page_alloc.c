@@ -70,7 +70,7 @@
 
 atomic_long_t kswapd_waiters = ATOMIC_LONG_INIT(0);
 
-#ifndef CONFIG_KERNEL_DEBUG
+#ifndef CONFIG_DEBUG_KERNEL
 inline void dump_page(struct page *page, const char *reason) {}
 EXPORT_SYMBOL(dump_page);
 #endif
