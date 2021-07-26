@@ -820,8 +820,14 @@ CHECKFLAGS     += $(NOSTDINC_FLAGS)
 # warn about C99 declaration after statement
 KBUILD_CFLAGS += $(call cc-option,-Wdeclaration-after-statement,)
 
+# Variable Length Arrays (VLAs) Detection
 # Variable Length Arrays (VLAs) should not be used anywhere in the kernel
+ifdef CONFIG_VLA_WARN_ON_DETECT
 KBUILD_CFLAGS += $(call cc-option,-Wvla)
+endif
+ifdef CONFIG_VLA_ERROR_ON_DETECT
+KBUILD_CFLAGS    += -Werror=vla
+endif
 
 # disable pointer signed / unsigned warnings in gcc 4.0
 KBUILD_CFLAGS += $(call cc-disable-warning, pointer-sign)
