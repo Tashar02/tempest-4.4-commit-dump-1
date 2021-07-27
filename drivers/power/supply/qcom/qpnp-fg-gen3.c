@@ -419,7 +419,7 @@ extern int rradc_die;
 #endif
 #endif
 
-#define FG_RATE_LIM_MS (2 * MSEC_PER_SEC)
+#define FG_RATE_LIM_MS (5 * MSEC_PER_SEC)
 
 /* All getters HERE */
 
