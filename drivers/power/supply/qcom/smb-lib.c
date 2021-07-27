@@ -2734,8 +2734,11 @@ int smblib_get_prop_die_health(struct smb_charger *chg,
 }
 
 #define SDP_CURRENT_UA			500000
-#define CDP_CURRENT_UA			1500000
 #ifdef CONFIG_MACH_LONGCHEER
+#define CDP_CURRENT_UA			500000
+#else
+#define CDP_CURRENT_UA			1500000
+#endif
 #define DCP_CURRENT_UA			2000000
 #if defined(CONFIG_MACH_XIAOMI_WAYNE) || defined(CONFIG_MACH_XIAOMI_LAVENDER)
 #define HVDCP2_CURRENT_UA		1500000
@@ -2750,7 +2753,6 @@ int smblib_get_prop_die_health(struct smb_charger *chg,
 #define HVDCP_CURRENT_UA		2000000
 #else
 #define HVDCP_CURRENT_UA		2500000
-#endif
 #endif
 #define TYPEC_DEFAULT_CURRENT_UA	900000
 #define TYPEC_MEDIUM_CURRENT_UA		1500000
