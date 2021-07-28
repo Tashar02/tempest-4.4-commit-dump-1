@@ -4,42 +4,42 @@
 	cpus {
 		CPU0: cpu@0 {
 			clock-frequency = <1843200000>;
-			efficiency = <1024>;
+			efficiency = <635>;
 			};
 
 		CPU1: cpu@1 {
 			clock-frequency = <1843200000>;
-			efficiency = <1024>;
+			efficiency = <635>;
 			};
 
 		CPU2: cpu@2 {
 			clock-frequency = <1843200000>;
-			efficiency = <1024>;
+			efficiency = <635>;
 			};
 
 		CPU3: cpu@3 {	
 			clock-frequency = <1843200000>;
-			efficiency = <1024>;
+			efficiency = <635>;
 			};
 
 		CPU4: cpu@100 {
 			clock-frequency = <2208000000>;
-			efficiency = <1638>;
+			efficiency = <1024>;
 			};
 
 		CPU5: cpu@101 {
 			clock-frequency = <2208000000>;
-			efficiency = <1638>;
+			efficiency = <1024>;
 			};
 
 		CPU6: cpu@102 {
 			clock-frequency = <2208000000>;
-			efficiency = <1638>;
+			efficiency = <1024>;
 			};
 
 		CPU7: cpu@103 {
 			clock-frequency = <2208000000>;
-			efficiency = <1638>;
+			efficiency = <1024>;
 			};
 	};
 
@@ -48,29 +48,27 @@
 
 		CPU_COST_0: core-cost0 {
 			busy-cost-data = <
-				633600	41
-				902400	70
-				1113600	83
-				1401600	152
-				1536000	308
-				1612800 183
-				1747200	470
-				1843200	776
+				633600	26
+				902400	46
+				1113600	49
+				1401600	94
+				1536000	109
+				1747200	145
+				1843200	176
 			>;
 			idle-cost-data = <
-				20 16 12 8
+				20 16 10 8
 			>;
 		};
 
 		CPU_COST_1: core-cost1 {
 			busy-cost-data = <
-				1113600	407
-				1401600	883
-				1747200	1222
-				1804800	1540
-				1958400	1980
-				2150400	2392
-				2208000	3332
+				1113600	188
+				1401600	293
+				1747200	431
+				1958400	523
+				2150400	626
+				2208000	733
 			>;
 			idle-cost-data = <
 				100 80 60 40
@@ -80,13 +78,12 @@
 		CLUSTER_COST_0: cluster-cost0 {
 			busy-cost-data = <
 				633600	4
-				902400	8
-				1113600	14
-				1401600	20
-				1536000	38
-				1612800 10
-				1747200	45
-				1843200	56
+				902400	5
+				1113600	7
+				1401600	9
+				1536000	9
+				1747200	11
+				1843200	13
 			>;
 			idle-cost-data = <
 				4 3 2 1
@@ -95,13 +92,12 @@
 
 		CLUSTER_COST_1: cluster-cost1 {
 			busy-cost-data = <
-				1113600	126
-				1401600	182
-				1747200	250
-				1804800	316
-				1958400	480
-				2150400	560
-				2208000	780
+				1113600	14
+				1401600	17
+				1747200	25
+				1958400	31
+				2150400	37
+				2208000	44
 			>;
 			idle-cost-data = <
 				4 3 2 1
