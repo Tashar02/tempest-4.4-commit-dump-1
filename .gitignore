@@ -113,3 +113,24 @@ all.config
 
 # Kdevelop4
 *.kdev4
+
+# fetched Android config fragments
+android/configs/android-*.cfg
+
+#
+#Ignoring Android.bp link file
+#
+Android.bp
+
+#
+# Ignore build scripts and related directories
+#
+/out
+/wayne
+/GCC
+/CLANG
+/Allrounder.sh
+/build.sh
+/fancy.sh
+/regen.sh
+/tempest-bot.sh

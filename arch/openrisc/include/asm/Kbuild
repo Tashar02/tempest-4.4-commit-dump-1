@@ -1,6 +1,3 @@
-
-header-y += ucontext.h
-
 generic-y += atomic.h
 generic-y += auxvec.h
 generic-y += barrier.h
@@ -25,6 +22,7 @@ generic-y += fcntl.h
 generic-y += ftrace.h
 generic-y += futex.h
 generic-y += hardirq.h
+generic-y += hash.h
 generic-y += hw_irq.h
 generic-y += ioctl.h
 generic-y += ioctls.h
