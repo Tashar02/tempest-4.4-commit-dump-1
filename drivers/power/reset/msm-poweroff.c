@@ -73,9 +73,13 @@ static void scm_disable_sdi(void);
 static int in_panic;
 static int dload_type = SCM_DLOAD_FULLDUMP;
 #ifdef CONFIG_MACH_LONGCHEER
-int download_mode = 0;
-#else
+#ifdef CONFIG_MACH_XIAOMI_WHYRED
 int download_mode = 1;
+#else
+int download_mode = 0;
+#endif
+#else
+static int download_mode = 1;
 #endif
 static struct kobject dload_kobj;
 static void *dload_mode_addr, *dload_type_addr;
@@ -304,11 +308,7 @@ static void msm_restart_prepare(const char *cmd)
 	} else {
 		qpnp_pon_system_pwr_off(PON_POWER_OFF_HARD_RESET);
 	}
-
-	if (in_panic) {
-		qpnp_pon_set_restart_reason(PON_RESTART_REASON_PANIC);
-		qpnp_pon_system_pwr_off(PON_POWER_OFF_WARM_RESET);
-	} else if (cmd != NULL) {
+	if (cmd != NULL) {
 		if (!strncmp(cmd, "bootloader", 10)) {
 			qpnp_pon_set_restart_reason(
 				PON_RESTART_REASON_BOOTLOADER);
@@ -358,17 +358,29 @@ static void msm_restart_prepare(const char *cmd)
 					     restart_reason);
 			}
 		} else if (!strncmp(cmd, "edl", 3)) {
-			if (0)
-				enable_emergency_dload_mode();
-			else
+#ifdef CONFIG_MACH_LONGCHEER
+			if (0) {
+#endif
+			enable_emergency_dload_mode();
+#ifdef CONFIG_MACH_LONGCHEER
+			} else {
 				pr_notice("This command already been disabled\n");
+			}
+#endif
 		} else {
+#ifdef CONFIG_MACH_LONGCHEER
 			qpnp_pon_set_restart_reason(PON_RESTART_REASON_NORMAL);
+#endif
 			__raw_writel(0x77665501, restart_reason);
 		}
+#ifdef CONFIG_MACH_LONGCHEER
+	} else if (in_panic) {
+		qpnp_pon_set_restart_reason(PON_RESTART_REASON_PANIC);
+		qpnp_pon_system_pwr_off(PON_POWER_OFF_WARM_RESET);
 	} else {
 		qpnp_pon_set_restart_reason(PON_RESTART_REASON_NORMAL);
 		__raw_writel(0x77665501, restart_reason);
+#endif
 	}
 
 	flush_cache_all();
