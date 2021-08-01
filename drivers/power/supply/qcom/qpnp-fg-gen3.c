@@ -834,7 +834,7 @@ static int fg_get_msoc_raw(struct fg_chip *chip, int *val)
 
 #define FULL_CAPACITY	100
 #define FULL_SOC_RAW	255
-#ifdef CONFIG_MACH_XIAOMI_WAYNE
+#if defined(CONFIG_MACH_XIAOMI_LAVENDER) || defined(CONFIG_MACH_XIAOMI_WAYNE)
 #define FULL_SOC_REPORT_THR 250
 #endif
 static int fg_get_msoc(struct fg_chip *chip, int *msoc)
@@ -853,7 +853,7 @@ static int fg_get_msoc(struct fg_chip *chip, int *msoc)
 	 */
 	if (*msoc == FULL_SOC_RAW)
 		*msoc = 100;
-#ifdef CONFIG_MACH_XIAOMI_WAYNE
+#if defined(CONFIG_MACH_XIAOMI_LAVENDER) || defined(CONFIG_MACH_XIAOMI_WAYNE)
 	else if ((*msoc >= FULL_SOC_REPORT_THR - 2)
 			&& (*msoc < FULL_SOC_RAW) && chip->report_full) {
 		*msoc = DIV_ROUND_CLOSEST(*msoc * FULL_CAPACITY, FULL_SOC_RAW) + 1;
@@ -2857,7 +2857,7 @@ static void status_change_work(struct work_struct *work)
 			struct fg_chip, status_change_work);
 	union power_supply_propval prop = {0, };
 	int rc, batt_temp;
-#ifdef CONFIG_MACH_XIAOMI_WAYNE
+#if defined(CONFIG_MACH_XIAOMI_LAVENDER) || defined(CONFIG_MACH_XIAOMI_WAYNE)
 	int msoc;
 #endif
 
@@ -2893,7 +2893,7 @@ static void status_change_work(struct work_struct *work)
 	fg_cycle_counter_update(chip);
 	fg_cap_learning_update(chip);
 
-#ifdef CONFIG_MACH_XIAOMI_WAYNE
+#if defined(CONFIG_MACH_XIAOMI_LAVENDER) || defined(CONFIG_MACH_XIAOMI_WAYNE)
 	if (chip->charge_done && !chip->report_full) {
 		chip->report_full = true;
 	} else if (!chip->charge_done && chip->report_full) {
