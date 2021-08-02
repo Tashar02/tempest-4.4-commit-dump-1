@@ -34,7 +34,6 @@ extern int hwc_check_global;
 #endif
 #endif
 
-#ifdef DEBUG
 #define smblib_err(chg, fmt, ...)		\
 	pr_err("%s: %s: " fmt, chg->name,	\
 		__func__, ##__VA_ARGS__)	\
