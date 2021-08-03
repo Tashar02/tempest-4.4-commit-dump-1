@@ -320,7 +320,6 @@ static inline char __iomem *sde_hw_rotator_get_regdma_segment_base(
 static inline char __iomem *sde_hw_rotator_get_regdma_segment(
 		struct sde_hw_rotator_context *ctx)
 {
-	u32 idx = sde_hw_rotator_get_regdma_ctxidx(ctx);
 	char __iomem *addr = ctx->regdma_wrptr;
 
 	SDEROT_DBG("regdma slot[%d] ==> %p\n", idx, addr);
@@ -337,7 +336,6 @@ static inline void sde_hw_rotator_put_regdma_segment(
 		struct sde_hw_rotator_context *ctx,
 		char __iomem *wrptr)
 {
-	u32 idx = sde_hw_rotator_get_regdma_ctxidx(ctx);
 
 	ctx->regdma_wrptr = wrptr;
 	SDEROT_DBG("regdma slot[%d] <== %p\n", idx, wrptr);
