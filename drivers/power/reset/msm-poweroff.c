@@ -84,7 +84,15 @@ static struct notifier_block panic_blk = {
 #endif
 
 static int dload_type = SCM_DLOAD_FULLDUMP;
+#ifdef CONFIG_MACH_LONGCHEER
+#ifdef CONFIG_MACH_XIAOMI_WHYRED
+int download_mode = 1;
+#else
+int download_mode = 0;
+#endif
+#else
 static int download_mode = 1;
+#endif
 static struct kobject dload_kobj;
 static void *dload_mode_addr, *dload_type_addr;
 static bool dload_mode_enabled;
@@ -352,7 +360,15 @@ static void msm_restart_prepare(const char *cmd)
 					     restart_reason);
 			}
 		} else if (!strncmp(cmd, "edl", 3)) {
+#ifdef CONFIG_MACH_LONGCHEER
+			if (0) {
+#endif
 			enable_emergency_dload_mode();
+#ifdef CONFIG_MACH_LONGCHEER
+			} else {
+				pr_notice("This command already been disabled\n");
+			}
+#endif
 		} else {
 #ifdef CONFIG_MACH_LONGCHEER
 			qpnp_pon_set_restart_reason(PON_RESTART_REASON_NORMAL);
@@ -717,3 +733,4 @@ static int __init msm_restart_init(void)
 	return platform_driver_register(&msm_restart_driver);
 }
 pure_initcall(msm_restart_init);
+
