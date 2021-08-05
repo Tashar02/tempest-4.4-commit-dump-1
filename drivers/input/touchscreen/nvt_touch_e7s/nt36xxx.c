@@ -17,6 +17,7 @@
 #include <linux/gpio.h>
 #include <asm/uaccess.h>
 #include <linux/input/mt.h>
+#include <linux/wakelock.h>
 #include <linux/of_gpio.h>
 #include <linux/of_irq.h>
 #include <linux/notifier.h>
@@ -76,7 +77,7 @@ const uint16_t gesture_key_array[] = {
 bool enable_gesture_mode = false;
 bool delay_gesture = false;
 bool suspend_state = false;
-static struct wakeup_source *gesture_wakelock;
+static struct wake_lock gestrue_wakelock;
 
 int nvt_gesture_switch(struct input_dev *dev, unsigned int type, unsigned int code, int value)
 {
@@ -508,7 +509,7 @@ static irqreturn_t nvt_ts_irq_handler(int32_t irq, void *dev_id)
 {
 #if WAKEUP_GESTURE
 	if (bTouchIsAwake == 0) {
-		__pm_wakeup_event(gesture_wakelock, msecs_to_jiffies(5000));
+		wake_lock_timeout(&gestrue_wakelock, msecs_to_jiffies(5000));
 	}
 #endif
 
@@ -653,7 +654,7 @@ static int32_t nvt_ts_probe(struct i2c_client *client, const struct i2c_device_i
 	for (retry = 0; retry < (sizeof(gesture_key_array) / sizeof(gesture_key_array[0])); retry++) {
 		input_set_capability(ts->input_dev, EV_KEY, gesture_key_array[retry]);
 	}
-	gesture_wakelock = wakeup_source_register(NULL, "gesture_wakelock");
+	wake_lock_init(&gestrue_wakelock, WAKE_LOCK_SUSPEND, "poll-wake-lock");
 #ifdef CONFIG_TOUCHSCREEN_COMMON
 	ret = tp_common_set_double_tap_ops(&double_tap_ops);
 #endif
