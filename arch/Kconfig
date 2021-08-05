@@ -460,7 +460,7 @@ config LD_LLD
 
 endchoice
 
-config HAVE_LD_DEAD_CODE_DATA_ELIMINATION
+config LD_DEAD_CODE_DATA_ELIMINATION
 	bool
 	help
 	  Select this if the architecture wants to do dead code and
