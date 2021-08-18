@@ -11,7 +11,7 @@
  */
 
 #include "tulip-camera-sensor-mtp.dtsi"
-#include "focaltech-ft8719-i2c.dtsi"
+#include "sdm636-i2c_e7t.dtsi"
 
 /* msm-pm660.dtsi tulip specific diff */
 &pm660_charger {
