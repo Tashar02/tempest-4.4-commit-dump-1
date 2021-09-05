@@ -6,6 +6,7 @@ generic-y += current.h
 generic-y += emergency-restart.h
 generic-y += errno.h
 generic-y += exec.h
+generic-y += hash.h
 generic-y += ioctl.h
 generic-y += ipcbuf.h
 generic-y += irq_regs.h
@@ -36,3 +37,6 @@ generic-y += termbits.h
 generic-y += termios.h
 generic-y += timex.h
 generic-y += trace_clock.h
+
+generated-y += mach-types.h
+generated-y += unistd-nr.h
