@@ -476,16 +476,10 @@ static inline unsigned long __copy_to_user_inatomic(void __user *to,
 			return 0;
 	}
 
-<<<<<<< HEAD
 	allow_write_to_user(to, n);
 	ret = __copy_tofrom_user(to, (__force const void __user *)from, n);
 	prevent_write_to_user(to, n);
 	return ret;
-=======
-	check_object_size(from, n, true);
-
-	return __copy_tofrom_user(to, (__force const void __user *)from, n);
->>>>>>> 23f371ab36ff7bd9486a0988fba17f69ce0562dd
 }
 
 static inline unsigned long __copy_from_user(void *to,
