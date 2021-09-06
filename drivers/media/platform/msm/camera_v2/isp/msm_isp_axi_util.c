@@ -567,7 +567,7 @@ static void msm_isp_cfg_framedrop_reg(
 		framedrop_pattern = 0x1;
 #ifdef CONFIG_MACH_LONGCHEER
 		if (framedrop_period > 1)
-			framedrop_pattern = framedrop_pattern << (framedrop_period-1);
+			framedrop_pattern = framedrop_pattern << (framedrop_period - 1);
 #endif
 	}
 
